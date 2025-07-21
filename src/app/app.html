@@ -1,17 +1,8 @@
 <app-header></app-header>
 
 <main class="container">
-  <article>
-    <header>
-      <!-- Here we add a Tailwind utility class to a Pico-styled element -->
-      <h1 class="text-cyan-400" style="text-align: center;">Welcome to Verdicta</h1>
-      <p style="text-align: center;">The exclusive digital forum for Austria's legal minds. Connect, discuss, and grow with peers and mentors in a secure, professional environment.</p>
-    </header>
-    <!-- We can add Tailwind margin and shadow classes to this Pico button -->
-    <div class="text-center mt-4">
-      <button class="shadow-lg">Join the Discussion</button>
-    </div>
-  </article>
+  <!-- Angular will render the component for the current route here -->
+  <router-outlet></router-outlet>
 </main>
 
 <app-footer></app-footer>

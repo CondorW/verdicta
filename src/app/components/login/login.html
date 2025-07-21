@@ -1,1 +1,20 @@
-<p>login works!</p>
+<article>
+  <header><h2>Login to your Account</h2></header>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label for="email">
+      Email Address
+      <input type="email" id="email" formControlName="email" placeholder="Email Address" required>
+    </label>
+    <label for="password">
+      Password
+      <input type="password" id="password" formControlName="password" placeholder="Password" required>
+    </label>
+
+    <!-- Display error messages -->
+    <p *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="loginForm.invalid || isLoading" [attr.aria-busy]="isLoading">
+      {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+  </form>
+</article>

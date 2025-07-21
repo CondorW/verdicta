@@ -1,1 +1,22 @@
-<p>register works!</p>
+<article>
+  <header><h2>Register a new Account</h2></header>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label for="email">
+      Email Address
+      <input type="email" id="email" formControlName="email" placeholder="Email Address" required>
+    </label>
+    <label for="password">
+      Password
+      <input type="password" id="password" formControlName="password" placeholder="Password" required>
+      <small>Must be at least 6 characters long.</small>
+    </label>
+
+    <!-- Display error messages -->
+    <p *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="registerForm.invalid || isLoading" [attr.aria-busy]="isLoading">
+      {{ isLoading ? 'Registering...' : 'Register' }}
+    </button>
+  </form>
+</article>
+

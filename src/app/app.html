@@ -1,29 +1,17 @@
-<div class="min-h-screen bg-gray-800 text-gray-100 font-sans flex flex-col">
-  <!-- Header -->
-  <app-header></app-header>
+<app-header></app-header>
 
-  <!-- Main Content Area -->
-  <main class="flex-grow container mx-auto px-6 py-12">
-    <!-- This is where our routed content will appear later -->
-    <!-- For now, we'll put a welcome message here -->
-    <div class="text-center">
-      <h1 class="text-5xl font-extrabold text-white mb-4">
-        Welcome to <span class="text-indigo-400">Verdicta</span>
-      </h1>
-      <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-        The exclusive digital forum for Austria's legal minds. Connect, discuss, and grow with peers and mentors in a secure, professional environment.
-      </p>
-      <div class="mt-8">
-        <button class="bg-indigo-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-indigo-500 transition-colors duration-300 shadow-lg">
-          Join the Discussion
-        </button>
-      </div>
+<main class="container">
+  <article>
+    <header>
+      <!-- Here we add a Tailwind utility class to a Pico-styled element -->
+      <h1 class="text-cyan-400" style="text-align: center;">Welcome to Verdicta</h1>
+      <p style="text-align: center;">The exclusive digital forum for Austria's legal minds. Connect, discuss, and grow with peers and mentors in a secure, professional environment.</p>
+    </header>
+    <!-- We can add Tailwind margin and shadow classes to this Pico button -->
+    <div class="text-center mt-4">
+      <button class="shadow-lg">Join the Discussion</button>
     </div>
+  </article>
+</main>
 
-    <!-- We can add more sections to the homepage here in the future -->
-
-  </main>
-
-  <!-- Footer -->
-  <app-footer></app-footer>
-</div>
+<app-footer></app-footer>

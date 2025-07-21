@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// Import RouterLink so the template can use it
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
-  // Corrected the template path
+  // Add RouterLink to the imports array
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.html',
 })
-export class HeaderComponent {
-  // We can add properties and methods here later
-  // for things like user login status.
-}
+export class HeaderComponent { }

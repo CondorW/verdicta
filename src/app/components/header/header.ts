@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// Import RouterLink so the template can use it
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  // Add RouterLink to the imports array
   imports: [CommonModule, RouterLink],
   templateUrl: './header.html',
 })
-export class HeaderComponent { }
+export class HeaderComponent {
+  public authService = inject(AuthService);
+}

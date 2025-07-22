@@ -4,6 +4,8 @@
   </ul>
   <ul>
     <li><a routerLink="/forum">Forum</a></li>
+    <!-- Use *ngIf with the isAdmin$ observable to show/hide the link -->
+    <li *ngIf="authService.isAdmin$ | async"><a routerLink="/admin">Admin</a></li>
     <li><a href="#">About</a></li>
     <li><a routerLink="/login" role="button" class="secondary">Login</a></li>
     <li><a routerLink="/register" role="button">Register</a></li>

@@ -1,1 +1,16 @@
-<p>admin works!</p>
+<div class="grid">
+  <!-- Sidebar Navigation -->
+  <aside>
+    <nav>
+      <ul>
+        <li><a routerLink="posts" class="contrast">Manage Posts</a></li>
+        <li><a routerLink="users" class="contrast">Manage Users</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

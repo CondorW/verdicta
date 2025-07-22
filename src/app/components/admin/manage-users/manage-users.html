@@ -1,1 +1,26 @@
-<p>manage-users works!</p>
+<article>
+  <header><h3>Manage Users</h3></header>
+  <table>
+    <thead>
+      <tr>
+        <th>Display Name</th>
+        <th>Email</th>
+        <th>Rank</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users$ | async">
+        <td>{{ user.displayName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.rank }}</td>
+        <td>
+          <select [value]="user.role" (change)="onRoleChange(user.uid, $event)">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</article>

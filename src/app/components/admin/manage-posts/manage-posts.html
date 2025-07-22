@@ -1,1 +1,23 @@
-<p>manage-posts works!</p>
+<article>
+  <header><h3>Manage Posts</h3></header>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let post of posts$ | async">
+        <td>{{ post.title }}</td>
+        <td>{{ post.authorDisplayName }}</td>
+        <td>{{ post.createdAt?.toDate() | date:'short' }}</td>
+        <td>
+          <button (click)="deletePost(post.id!)" class="pico-color-red">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</article>

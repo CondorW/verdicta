@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // Import ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.html',
 })
 export class RegisterComponent {
@@ -33,8 +33,12 @@ export class RegisterComponent {
     this.isLoading = true;
     this.errorMessage = null;
     try {
-      await this.authService.register(this.registerForm.value);
-      this.router.navigate(['/']); // Navigate to home on success
+      // 1. Register the user in Firebase Auth
+      const userCredential = await this.authService.register(this.registerForm.value);
+      // 2. Create the user profile in Firestore
+      await this.authService.createUserProfile(userCredential);
+      // 3. Navigate to home on success
+      this.router.navigate(['/']);
     } catch (e: any) {
       this.errorMessage = e.message;
     } finally {

@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -12,4 +11,14 @@ import { Observable } from 'rxjs';
 })
 export class HeaderComponent {
   public authService = inject(AuthService);
+  private router = inject(Router);
+
+  async logout() {
+    try {
+      await this.authService.logout();
+      this.router.navigate(['/']); // Navigate to home after logout
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }
 }

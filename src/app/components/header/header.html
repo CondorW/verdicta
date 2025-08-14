@@ -4,10 +4,20 @@
   </ul>
   <ul>
     <li><a routerLink="/forum">Forum</a></li>
-    <!-- Use *ngIf with the isAdmin$ observable to show/hide the link -->
     <li *ngIf="authService.isAdmin$ | async"><a routerLink="/admin">Admin</a></li>
     <li><a href="#">About</a></li>
-    <li><a routerLink="/login" role="button" class="secondary">Login</a></li>
-    <li><a routerLink="/register" role="button">Register</a></li>
+
+    <!-- Use ng-container with an else block for conditional logic -->
+    <ng-container *ngIf="authService.userProfile$ | async; else loggedOut">
+      <!-- This content shows if the user IS logged in -->
+      <li><a routerLink="/profile" role="button" class="secondary">Profile</a></li>
+      <li><a (click)="logout()" role="button">Logout</a></li>
+    </ng-container>
+
+    <!-- This template shows if the user IS NOT logged in -->
+    <ng-template #loggedOut>
+      <li><a routerLink="/login" role="button" class="secondary">Login</a></li>
+      <li><a routerLink="/register" role="button">Register</a></li>
+    </ng-template>
   </ul>
 </nav>

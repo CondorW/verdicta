@@ -9,15 +9,19 @@ import { UserProfile } from './auth.service';
 export class UserService {
   private firestore: Firestore = inject(Firestore);
 
-  // Get a real-time stream of all user profiles
   getAllUsers(): Observable<UserProfile[]> {
     const usersCollection = collection(this.firestore, 'users');
     return collectionData(usersCollection, { idField: 'uid' }) as Observable<UserProfile[]>;
   }
 
-  // Update a user's role
   updateUserRole(uid: string, role: 'User' | 'Admin') {
     const userDocRef = doc(this.firestore, `users/${uid}`);
     return updateDoc(userDocRef, { role: role });
+  }
+
+  // New method to update user profile data
+  updateUserProfile(uid: string, data: Partial<UserProfile>) {
+    const userDocRef = doc(this.firestore, `users/${uid}`);
+    return updateDoc(userDocRef, data);
   }
 }

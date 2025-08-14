@@ -1,0 +1,32 @@
+<article>
+  <header><h3>Edit Your Profile</h3></header>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <!-- Email (read-only) -->
+    <label for="email">
+      Email Address
+      <input type="email" id="email" formControlName="email" readonly>
+    </label>
+
+    <!-- Display Name -->
+    <label for="displayName">
+      Display Name
+      <input type="text" id="displayName" formControlName="displayName" required>
+    </label>
+
+    <!-- Rank -->
+    <label for="rank">
+      Rank / Title
+      <select id="rank" formControlName="rank" required>
+        <option *ngFor="let rank of ranks" [value]="rank">{{ rank }}</option>
+      </select>
+    </label>
+
+    <!-- Success Message -->
+    <p *ngIf="successMessage" class="text-green-500">{{ successMessage }}</p>
+
+    <button type="submit" [disabled]="profileForm.invalid || isLoading" [attr.aria-busy]="isLoading">
+      {{ isLoading ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </form>
+</article>

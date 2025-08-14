@@ -1,52 +1,31 @@
 <article>
   <header><h3>Create a New Post</h3></header>
   <form [formGroup]="postForm" (ngSubmit)="createPost()">
-    <label for="title">
-      Title
-      <input type="text" id="title" formControlName="title" placeholder="Post Title" required>
-    </label>
-    <label for="content">
-      Content
-      <textarea id="content" formControlName="content" placeholder="What's on your mind?" required></textarea>
-    </label>
+    <label for="title">Title<input type="text" id="title" formControlName="title" placeholder="Post Title" required></label>
+    <label for="content">Content<textarea id="content" formControlName="content" placeholder="What's on your mind?" required></textarea></label>
     <p *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</p>
-    <button type="submit" [disabled]="postForm.invalid || isLoading" [attr.aria-busy]="isLoading">
-      {{ isLoading ? 'Submitting...' : 'Submit Post' }}
-    </button>
+    <button type="submit" [disabled]="postForm.invalid || isLoading" [attr.aria-busy]="isLoading">{{ isLoading ? 'Submitting...' : 'Submit Post' }}</button>
   </form>
 </article>
-
-<!-- Divider -->
 <hr>
-
-<!-- Post Feed -->
 <section>
   <h2>Recent Posts</h2>
-  <!-- Use the async pipe to subscribe to the posts$ observable -->
   <ng-container *ngIf="posts$ | async as posts; else loading">
     <ng-container *ngIf="posts.length > 0; else noPosts">
-      <!-- Loop through each post and display it as a card -->
-      <article *ngFor="let post of posts">
-        <header>
-          <h4>{{ post.title }}</h4>
-        </header>
-        <p>{{ post.content | slice:0:200 }}...</p> <!-- Show a preview of the content -->
-        <footer>
-          <small>
-            Posted by {{ post.authorDisplayName }} on {{ post.createdAt?.toDate() | date:'medium' }}
-          </small>
-        </footer>
-      </article>
+      <a *ngFor="let post of posts" [routerLink]="['/post', post.id]" class="block no-underline">
+        <article>
+          <header>
+            <h4>{{ post.title }}</h4>
+          </header>
+          <p>{{ post.content | slice:0:200 }}...</p>
+          <footer>
+            <small>Posted by {{ post.authorDisplayName }} on {{ post.createdAt?.toDate() | date:'medium' }}</small>
+            <small class="ml-4">👍 {{ post.upvoteCount || 0 }} Upvotes</small>
+          </footer>
+        </article>
+      </a>
     </ng-container>
   </ng-container>
-
-  <!-- Template for loading state -->
-  <ng-template #loading>
-    <p aria-busy="true">Loading posts...</p>
-  </ng-template>
-
-  <!-- Template for when there are no posts -->
-  <ng-template #noPosts>
-    <p>No posts yet. Be the first to create one!</p>
-  </ng-template>
+  <ng-template #loading><p aria-busy="true">Loading posts...</p></ng-template>
+  <ng-template #noPosts><p>No posts yet. Be the first to create one!</p></ng-template>
 </section>

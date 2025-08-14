@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Observable } from 'rxjs';
 import { Post, PostService } from '../../services/post.service';
 import { Auth } from '@angular/fire/auth';
+import { RouterLink } from '@angular/router'; // Import RouterLink
 
 @Component({
   selector: 'app-forum',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink], // Add RouterLink here
   templateUrl: './forum.html',
 })
 export class ForumComponent implements OnInit {
@@ -26,7 +27,6 @@ export class ForumComponent implements OnInit {
       title: ['', Validators.required],
       content: ['', Validators.required],
     });
-    // Initialize the posts stream
     this.posts$ = this.postService.getPosts();
   }
 
@@ -44,17 +44,16 @@ export class ForumComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const newPost: Post = {
+    const newPost: Omit<Post, 'createdAt' | 'upvotedBy' | 'upvoteCount'> = {
       title: this.postForm.value.title,
       content: this.postForm.value.content,
       authorId: currentUser.uid,
       authorDisplayName: currentUser.email?.split('@')[0] || 'Anonymous',
-      createdAt: null // Will be set by the server
     };
 
     try {
       await this.postService.createPost(newPost);
-      this.postForm.reset(); // Clear the form on success
+      this.postForm.reset();
     } catch (e: any) {
       this.errorMessage = e.message;
     } finally {

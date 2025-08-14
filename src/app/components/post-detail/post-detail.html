@@ -1,0 +1,42 @@
+<ng-container *ngIf="post$ | async as post; else loading">
+  <article>
+    <header>
+      <h2>{{ post.title }}</h2>
+      <p>
+        <small>Posted by {{ post.authorDisplayName }} on {{ post.createdAt?.toDate() | date:'fullDate' }}</small>
+      </p>
+    </header>
+    <p [innerHTML]="post.content.replace('\n', '<br>')"></p>
+    <footer>
+      <button (click)="toggleUpvote(post)" [class.secondary]="!hasUserUpvoted(post)">
+        👍 {{ post.upvoteCount || 0 }} Upvote
+      </button>
+    </footer>
+  </article>
+
+  <section id="replies">
+    <hr>
+    <h3>Replies</h3>
+
+    <form [formGroup]="replyForm" (ngSubmit)="submitReply()">
+      <textarea formControlName="content" placeholder="Write a reply..."></textarea>
+      <button type="submit" [disabled]="replyForm.invalid">Submit Reply</button>
+    </form>
+
+    <ng-container *ngIf="replies$ | async as replies; else loadingReplies">
+      <article *ngFor="let reply of replies" class="mt-4">
+        <p>{{ reply.content }}</p>
+        <footer>
+          <small>By {{ reply.authorDisplayName }} on {{ reply.createdAt?.toDate() | date:'short' }}</small>
+        </footer>
+      </article>
+      <p *ngIf="replies.length === 0" class="mt-4">No replies yet. Be the first to comment!</p>
+    </ng-container>
+    <ng-template #loadingReplies><p aria-busy="true">Loading replies...</p></ng-template>
+  </section>
+
+</ng-container>
+
+<ng-template #loading>
+  <p aria-busy="true">Loading post...</p>
+</ng-template>

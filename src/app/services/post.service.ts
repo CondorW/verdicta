@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayRemove, arrayUnion, collection, collectionData, deleteDoc, doc, docData, increment, orderBy, query, serverTimestamp, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface Post {
   id?: string;
@@ -8,7 +9,17 @@ export interface Post {
   content: string;
   authorId: string;
   authorDisplayName: string;
-  createdAt: any;
+  createdAt: Timestamp;
+  upvotedBy?: string[];
+  upvoteCount?: number;
+}
+
+export interface Reply {
+  id?: string;
+  content: string;
+  authorId: string;
+  authorDisplayName: string;
+  createdAt: Timestamp;
 }
 
 @Injectable({
@@ -16,6 +27,7 @@ export interface Post {
 })
 export class PostService {
   private firestore: Firestore = inject(Firestore);
+  private authService = inject(AuthService);
 
   getPosts(): Observable<Post[]> {
     const postsCollection = collection(this.firestore, 'posts');
@@ -23,12 +35,54 @@ export class PostService {
     return collectionData(q, { idField: 'id' }) as Observable<Post[]>;
   }
 
-  createPost(post: Post) {
-    const postsCollection = collection(this.firestore, 'posts');
-    return addDoc(postsCollection, { ...post, createdAt: serverTimestamp() });
+  getPostById(postId: string): Observable<Post> {
+    const postDocRef = doc(this.firestore, `posts/${postId}`);
+    return docData(postDocRef, { idField: 'id' }) as Observable<Post>;
   }
 
-  // New method to delete a post
+  getRepliesForPost(postId: string): Observable<Reply[]> {
+    const repliesCollection = collection(this.firestore, `posts/${postId}/replies`);
+    const q = query(repliesCollection, orderBy('createdAt', 'asc'));
+    return collectionData(q, { idField: 'id' }) as Observable<Reply[]>;
+  }
+
+  createPost(post: Omit<Post, 'createdAt' | 'upvotedBy' | 'upvoteCount'>) {
+    const postsCollection = collection(this.firestore, 'posts');
+    return addDoc(postsCollection, {
+      ...post,
+      createdAt: serverTimestamp(),
+      upvotedBy: [],
+      upvoteCount: 0
+    });
+  }
+
+  addReplyToPost(postId: string, content: string) {
+    const currentUser = this.authService.auth.currentUser;
+    if (!currentUser) throw new Error('User not logged in!');
+
+    const repliesCollection = collection(this.firestore, `posts/${postId}/replies`);
+    const newReply = {
+      content,
+      authorId: currentUser.uid,
+      authorDisplayName: currentUser.email!.split('@')[0],
+      createdAt: serverTimestamp()
+    };
+    return addDoc(repliesCollection, newReply);
+  }
+
+  toggleUpvote(post: Post) {
+    const currentUser = this.authService.auth.currentUser;
+    if (!currentUser) throw new Error('User not logged in!');
+
+    const postDocRef = doc(this.firestore, `posts/${post.id!}`);
+    const hasUpvoted = post.upvotedBy?.includes(currentUser.uid);
+
+    return updateDoc(postDocRef, {
+      upvotedBy: hasUpvoted ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
+      upvoteCount: hasUpvoted ? increment(-1) : increment(1)
+    });
+  }
+
   deletePost(postId: string) {
     const postDocRef = doc(this.firestore, `posts/${postId}`);
     return deleteDoc(postDocRef);
